@@ -1,0 +1,101 @@
+import 'dart:math';
+
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(QuadraticCalculatorApp());
+}
+
+class QuadraticCalculatorApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Quadratic Calculator',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: QuadraticCalculatorScreen(),
+    );
+  }
+}
+
+class QuadraticCalculatorScreen extends StatefulWidget {
+  @override
+  _QuadraticCalculatorScreenState createState() => _QuadraticCalculatorScreenState();
+}
+
+class _QuadraticCalculatorScreenState extends State<QuadraticCalculatorScreen> {
+  TextEditingController aController = TextEditingController();
+  TextEditingController bController = TextEditingController();
+  TextEditingController cController = TextEditingController();
+  String result = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Quadratic Calculator'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              controller: aController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(labelText: 'Enter coefficient a'),
+            ),
+            TextField(
+              controller: bController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(labelText: 'Enter coefficient b'),
+            ),
+            TextField(
+              controller: cController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(labelText: 'Enter coefficient c'),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                calculateQuadratic();
+              },
+              child: Text('Calculate'),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Result: $result',
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void calculateQuadratic() {
+    double a = double.tryParse(aController.text) ?? 0.0;
+    double b = double.tryParse(bController.text) ?? 0.0;
+    double c = double.tryParse(cController.text) ?? 0.0;
+
+    double delta = b * b - 4 * a * c;
+
+    if (delta < 0) {
+      setState(() {
+        result = 'No real roots';
+      });
+    } else if (delta == 0) {
+      double x = -b / (2 * a);
+      setState(() {
+        result = 'One real root: $x';
+      });
+    } else {
+      double x1 = (-b + sqrt(delta)) / (2 * a);
+      double x2 = (-b - sqrt(delta)) / (2 * a);
+      setState(() {
+        result = 'Two real roots: $x1, $x2';
+      });
+    }
+  }
+}
